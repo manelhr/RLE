@@ -19,3 +19,7 @@ class RLEBase(object):
     def explain_instance(self,
                          **kwargs):
         return
+
+    def verboselly_explain(self,
+                           string):
+        print(string) if self.verbose else None
