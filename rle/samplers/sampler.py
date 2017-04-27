@@ -10,7 +10,7 @@ class Sampler(VerboseObject):
     def __init__(self,
                  features, f_names, f_types,
                  label, l_name, l_type,
-                 verbose=False):
+                 verbose):
 
         # initializes feature related variables
         self.features, self.f_names, self.f_types = features, f_names, f_types

@@ -8,10 +8,9 @@ class ProximitySampler(Sampler):
     def __init__(self,
                  features, f_names, f_types,
                  label, l_name, l_type,
-                 verbose=False):
+                 verbose):
 
-        super().__init__(self,
-                         features, f_names, f_types,
+        super().__init__(features, f_names, f_types,
                          label, l_name, l_type,
                          verbose)
 
@@ -20,3 +19,4 @@ class ProximitySampler(Sampler):
                instance):
 
         pass
+
