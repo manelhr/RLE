@@ -7,6 +7,12 @@ class VerboseObject(object):
 
     def __init__(self,
                  verbose):
+        """
+        Object with parameter for verbosity.
+
+        :param verbose: if true, allows verbose execution.
+        :return: Nothing.
+        """
         self.verbose = verbose
 
     def verboselly_say(self,
