@@ -36,8 +36,9 @@ class Sampler(VerboseObject):
     @abc.abstractmethod
     def sample(self, instance):
         """
+        This method creates samples to an instance, based on the desired method of sampling.
 
-        :param instance:
-        :return:
+        :param instance: numpy array with instance to be sampled.
+        :return: a tuple (features, label) of the sample.
         """
         pass
