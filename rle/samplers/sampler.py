@@ -10,7 +10,20 @@ class Sampler(VerboseObject):
     def __init__(self,
                  features, f_names, f_types,
                  label, l_name, l_type,
-                 verbose):
+                 verbose=False):
+        """
+        Initializes a sampler with things related to a dataset's features and its label. Only Work for datasets with
+        only one label.
+
+        :param features: a np.array of np.arrays containing the different features.
+        :param f_names: a list with the strings of the names features.
+        :param f_types: a list with the data types of the features.
+        :param label: a np.array containing a label.
+        :param l_name: a string with the name of the label.
+        :param l_type: the type of the label.
+        :param verbose: defined@VerboseObject.
+        :return: Nothing.
+        """
 
         # initializes feature related variables
         self.features, self.f_names, self.f_types = features, f_names, f_types
@@ -22,5 +35,9 @@ class Sampler(VerboseObject):
 
     @abc.abstractmethod
     def sample(self, instance):
+        """
 
+        :param instance:
+        :return:
+        """
         pass
