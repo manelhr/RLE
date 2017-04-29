@@ -1,3 +1,4 @@
+from rle.samplers.gaussian_sampler import GaussianSampler
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.datasets import make_circles
@@ -5,7 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas
 
-from rle.samplers.kernel_sampler import GaussianSampler
 
 X, y = make_circles(noise=0.10, factor=0.6, n_samples=500)
 X_train, X_test, y_train, y_test = train_test_split(X, y)
