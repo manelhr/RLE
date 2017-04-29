@@ -3,7 +3,9 @@ from rle.util.verbose_object import VerboseObject
 
 
 class Sampler(VerboseObject):
-    """ This is the abstract class that needs to be extended to implement the samplers for different models. """
+    """
+    This is the abstract class that needs to be extended to implement the samplers for different models.
+    """
 
     __metaclass__ = abc.ABCMeta
 
