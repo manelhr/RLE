@@ -28,7 +28,7 @@ class GaussianSampler(Sampler):
         :param l_type: defined@Sampler
         :param num_samples: Number of samples sampled.
         :param classifier_fn: classifier prediction probability function, which takes a numpy array and outputs
-        prediction probabilities. For ScikitClassifiers , this is classifier.predict_proba.
+        prediction probabilities. For ScikitClassifiers, this is classifier.predict_proba.
         :param verbose: defined@VerboseObject
         :return: defined@Sampler
         """

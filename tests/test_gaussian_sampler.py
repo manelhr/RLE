@@ -28,11 +28,9 @@ sampler = GaussianSampler(X, ["X Axis, Y Axis"], ["numerical", "numerical"],
 
 sample_f, sample_l = sampler.sample(decision)
 
-
 df2 = pandas.DataFrame(sample_f, columns=["X Axis", "Y Axis"])
 df2["Label"] = sample_l
 
 df2[df2.Label == 1].plot(kind="scatter", x="X Axis", y="Y Axis", color="LightBlue", ax=ax)
 df2[df2.Label == 0].plot(kind="scatter", x="X Axis", y="Y Axis", color="LightGreen", ax=ax)
 plt.show()
-
