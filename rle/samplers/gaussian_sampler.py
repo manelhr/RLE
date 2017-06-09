@@ -41,16 +41,20 @@ class GaussianSampler(Sampler):
         self.scaler.fit(features)
 
     def sample(self,
-               instance):
+               instance,
+               num_samples=None):
         """
         defined@Sampler
 
         :param instance: defined@Sampler
+        :param num_samples: defined@Sampler
         :return: defined@Sampler
         """
 
-        s_features = np.random.normal(0, 1, self.num_samples * instance.shape[0]) \
-            .reshape(self.num_samples, instance.shape[0]) * self.scaler.scale_ + instance
+        ns = num_samples if num_samples is not None else self.num_samples
+
+        s_features = np.random.normal(0, 1, ns * instance.shape[0]) \
+            .reshape(ns, instance.shape[0]) * self.scaler.scale_ + instance
 
         s_labels = np.array([np.argmax(inst) for inst in self.classifier_fn(s_features)])
 

@@ -28,10 +28,11 @@ class Explainer(VerboseObject):
         super().__init__(verbose)
 
     @abc.abstractmethod
-    def explain(self, decision):
+    def explain(self, decision, measure=None):
         """
         Explain a decision using an explainer. Returns an array with the importance of each feature.
         :param decision: the point of interest to be explained.
+        :param measure: if not none, replace the standard measure.
         :return: array with tuples ('feature', importance) where importance is a real number amd sum(importances) = 1.
         """
 

@@ -24,7 +24,7 @@ class Sampler(VerboseObject):
         :param label: a np.array containing a label.
         :param l_name: a string with the name of the label.
         :param l_type: the type of the label.
-        :param num_samples: Number of samples sampled.
+        :param num_samples: Number of samples sampled by default.
         :param classifier_fn: classifier prediction probability function, which takes a numpy array and outputs
         prediction probabilities. For ScikitClassifiers, this is classifier.predict_proba.
         :param verbose: defined@VerboseObject
@@ -43,11 +43,12 @@ class Sampler(VerboseObject):
         super().__init__(verbose)
 
     @abc.abstractmethod
-    def sample(self, instance):
+    def sample(self, instance, num_samples=None):
         """
         This method creates samples to an instance, based on the desired method of sampling.
 
         :param instance: numpy array with instance to be sampled.
+        :param num_samples: if not None, replace the standard number of samples.
         :return: a tuple (features, label) of the sample.
         """
         pass
