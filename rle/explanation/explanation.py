@@ -23,7 +23,7 @@ class Explanation(VerboseObject):
         :param sampler: sampler object.
         :param depicter: depicter object.
         :param num_samples: Number of samples sampled.
-        :param verbose:
+        :param verbose: defined@VerboseObject
         """
 
         self.model = model
