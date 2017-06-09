@@ -26,18 +26,16 @@ class GaussianSampler(Sampler):
         :param label: defined@Sampler
         :param l_name: defined@Sampler
         :param l_type: defined@Sampler
-        :param num_samples: Number of samples sampled.
-        :param classifier_fn: classifier prediction probability function, which takes a numpy array and outputs
-        prediction probabilities. For ScikitClassifiers, this is classifier.predict_proba.
+        :param num_samples: defined@Sampler
+        :param classifier_fn: defined@Sampler
         :param verbose: defined@VerboseObject
         :return: defined@Sampler
         """
         super().__init__(features, f_names, f_types,
                          label, l_name, l_type,
-                         verbose)
+                         verbose, num_samples,
+                         classifier_fn,)
 
-        self.num_samples = num_samples
-        self.classifier_fn = classifier_fn
         self.scaler = StandardScaler(with_mean=False)
         self.scaler.fit(features)
 
@@ -56,3 +54,4 @@ class GaussianSampler(Sampler):
         s_labels = np.array([np.argmax(inst) for inst in self.classifier_fn(s_features)])
 
         return s_features, s_labels
+

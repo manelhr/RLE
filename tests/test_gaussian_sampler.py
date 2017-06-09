@@ -24,6 +24,7 @@ ax[0].set_title("Original Data (Train)")
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 rf = RandomForestClassifier(n_estimators=100)
 rf.fit(X_train, y_train)
+rf.predict_proba()
 
 df = pandas.DataFrame(X_test, columns=["Feature 1", "Feature 2"])
 df["Label"] = rf.predict(X_test)

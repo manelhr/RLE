@@ -12,9 +12,10 @@ class Sampler(VerboseObject):
     def __init__(self,
                  features, f_names, f_types,
                  label, l_name, l_type,
+                 num_samples, classifier_fn,
                  verbose=False):
         """
-        Initializes a sampler with things related to a dataset's features and its label. Only Work for datasets with
+        Initializes a sampler with attributes related to a dataset's features and its label. Only Work for datasets with
         only one label.
 
         :param features: a np.array of np.arrays containing the different features.
@@ -23,6 +24,9 @@ class Sampler(VerboseObject):
         :param label: a np.array containing a label.
         :param l_name: a string with the name of the label.
         :param l_type: the type of the label.
+        :param num_samples: Number of samples sampled.
+        :param classifier_fn: classifier prediction probability function, which takes a numpy array and outputs
+        prediction probabilities. For ScikitClassifiers, this is classifier.predict_proba.
         :param verbose: defined@VerboseObject.
         :return: Nothing.
         """
@@ -32,6 +36,9 @@ class Sampler(VerboseObject):
 
         # initializes label related variables
         self.label, self.l_name, self.l_type = label, l_name, l_type
+
+        self.num_samples = num_samples
+        self.classifier_fn = classifier_fn
 
         super().__init__(verbose)
 
