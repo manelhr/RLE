@@ -9,6 +9,7 @@ class Explanation(VerboseObject):
                  model,
                  explainer, sampler, depicter,
                  num_samples=500,
+                 measure=1,
                  verbose=False):
         """
         :param features: a np.array of np.arrays containing the different features.
@@ -38,5 +39,8 @@ class Explanation(VerboseObject):
         self._sampler = sampler(features, f_names, f_types,
                                 label, l_name, l_type, num_samples,
                                 self.classifier_fn, verbose)
+
+        # Initializes explainer
+        self._explainer = explainer(self._sampler, measure, verbose)
 
         super().__init__(verbose)

@@ -9,6 +9,7 @@ import pandas
 fig, ax = plt.subplots(3, 1, figsize=(7, 6), sharex=True, sharey=True)
 
 X, y = make_circles(noise=0.10, factor=0.6, n_samples=1000)
+decision = np.array([-0.42, 0.62])
 
 # Plots original data
 
@@ -24,11 +25,9 @@ ax[0].set_title("Original Data (Train)")
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 rf = RandomForestClassifier(n_estimators=100)
 rf.fit(X_train, y_train)
-rf.predict_proba()
 
 df = pandas.DataFrame(X_test, columns=["Feature 1", "Feature 2"])
 df["Label"] = rf.predict(X_test)
-decision = np.array([-0.42, 0.62])
 
 ax[1].plot(decision[0], decision[1], "b*", label="Decision")
 df[df.Label == 1].plot(kind="scatter", x="Feature 1", y="Feature 2", color="LightBlue", alpha=0.8, ax=ax[1],style="+")

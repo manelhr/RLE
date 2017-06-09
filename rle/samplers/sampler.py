@@ -27,8 +27,8 @@ class Sampler(VerboseObject):
         :param num_samples: Number of samples sampled.
         :param classifier_fn: classifier prediction probability function, which takes a numpy array and outputs
         prediction probabilities. For ScikitClassifiers, this is classifier.predict_proba.
-        :param verbose: defined@VerboseObject.
-        :return: Nothing.
+        :param verbose: defined@VerboseObject
+        :return: nothing.
         """
 
         # initializes feature related variables
