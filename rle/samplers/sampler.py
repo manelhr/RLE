@@ -52,3 +52,11 @@ class Sampler(VerboseObject):
         :return: a tuple (features, label) of the sample.
         """
         pass
+
+    def feature_names(self):
+        """
+        Getter for the feature names.
+
+        :return: f_names arrays.
+        """
+        return self.f_names
