@@ -20,9 +20,11 @@ decision = np.array([-0.42, 0.62])
 
 df = pd.DataFrame(X, columns=["Feature 1", "Feature 2"])
 df["Label"] = y
-
-df[df.Label == 1].plot(kind="scatter", x="Feature 1", y="Feature 2", color="Blue", alpha=0.8, ax=axs[0])
-df[df.Label == 0].plot(kind="scatter", x="Feature 1", y="Feature 2", color="Green", alpha=0.8, ax=axs[0])
+df_l0 = df[df.Label == 0]
+df_l1 = df[df.Label == 1]
+axs[0].plot(decision[0], decision[1], "b*", label="Decision")
+axs[0].scatter(df_l0["Feature 1"].values, df_l0["Feature 2"].values, alpha=0.2)
+axs[0].scatter(df_l1["Feature 1"].values, df_l1["Feature 2"].values, alpha=0.2)
 axs[0].set_title("Original Data (Train)")
 
 # Plots classified data (Random Forest)
@@ -33,11 +35,12 @@ rf.fit(X_train, y_train)
 
 df = pd.DataFrame(X_test, columns=["Feature 1", "Feature 2"])
 df["Label"] = rf.predict(X_test)
-
+# Plots gaussian sample
+df_l0 = df[df.Label == 0]
+df_l1 = df[df.Label == 1]
 axs[1].plot(decision[0], decision[1], "b*", label="Decision")
-df[df.Label == 1].plot(kind="scatter", x="Feature 1", y="Feature 2", color="LightBlue", alpha=0.8, ax=axs[1], style="+")
-df[df.Label == 0].plot(kind="scatter", x="Feature 1", y="Feature 2", color="LightGreen", alpha=0.8, ax=axs[1],
-                       style="-")
+axs[1].scatter(df_l0["Feature 1"].values, df_l0["Feature 2"].values, alpha=0.4)
+axs[1].scatter(df_l1["Feature 1"].values, df_l1["Feature 2"].values, alpha=0.4)
 axs[1].set_title("Model Prediction (Test)")
 
 # Plots Gaussian Sample around [-0.42, 0.62]
@@ -51,11 +54,11 @@ sample_f, sample_l = sampler.sample(decision)
 df2 = pd.DataFrame(sample_f, columns=["Feature 1", "Feature 2"])
 df2["Label"] = sample_l
 
-c1 = df2[df2.Label == 1].plot(kind="scatter", x="Feature 1", y="Feature 2",
-                              color="LightBlue", ax=axs[2], label='Class 1')
-c2 = df2[df2.Label == 0].plot(kind="scatter", x="Feature 1", y="Feature 2",
-                              color="LightGreen", ax=axs[2], label='Class 2')
-c3 = axs[2].plot(decision[0], decision[1], "b*", label="Decision")
+df_l0 = df2[df2.Label == 0]
+df_l1 = df2[df2.Label == 1]
+axs[2].plot(decision[0], decision[1], "b*", label="Decision")
+axs[2].scatter(df_l0["Feature 1"].values, df_l0["Feature 2"].values, alpha=0.4, label='Class 1')
+axs[2].scatter(df_l1["Feature 1"].values, df_l1["Feature 2"].values, alpha=0.4, label='Class 2')
 axs[2].set_title("Sampling: $[-0.42, 0.62]$")
 
 axs[0].set_xlim(-1.5, 1.5)
