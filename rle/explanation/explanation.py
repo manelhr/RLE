@@ -27,12 +27,16 @@ class Explanation(VerboseObject):
         """
 
         self.model = model
+
         self.explainer, self.sampler, self.depicter = explainer, sampler, depicter
+
         self.features_train, self.features_test, self.label_train, self.label_test = train_test_split(features, label)
 
         # Trains the model
         self._model = model()
+
         self._model.fit(self.features_train, self.label_train)
+
         self.classifier_fn = self.model.predict_proba
 
         # Initializes sampler

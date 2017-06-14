@@ -24,7 +24,9 @@ class Explainer(VerboseObject):
         """
 
         self.sampler = sampler
+
         self.measure = measure
+
         super().__init__(verbose)
 
     @abc.abstractmethod

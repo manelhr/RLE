@@ -24,7 +24,10 @@ class LogisticRegressionExplainer(Explainer):
         """
 
         self.model = LogisticRegression()
-        self.sample_f, self.sample_l, self.last_decision, self.exponential_distances = None, None, None, None
+
+        self.sample_f, self.sample_l, self.last_decision = None, None, None
+
+        self.exponential_sim, self.distances = None, None
 
         super().__init__(sampler, measure, verbose)
 
@@ -45,9 +48,11 @@ class LogisticRegressionExplainer(Explainer):
 
         self.sample_f, self.sample_l = self.sampler.sample(decision)
 
-        distances = pairwise_distances(self.sample_f, decision.reshape(1, -1), metric='euclidean').ravel()
-        self.exponential_distances = np.sqrt(np.exp(-(distances ** 2) / ms ** 2))
-        self.model.fit(self.sample_f, self.sample_l, self.exponential_distances)
+        self.distances = pairwise_distances(self.sample_f, decision.reshape(1, -1), metric='euclidean').ravel()
+
+        self.exponential_sim = np.sqrt(np.exp(-(self.distances ** 2) / ms ** 2))
+
+        self.model.fit(self.sample_f, self.sample_l, sample_weight=self.exponential_sim)
 
         return list(zip(self.sampler.feature_names(),
                         list(self.model.coef_)[0])) + [('Intercept', self.model.intercept_[0])]
@@ -62,6 +67,11 @@ class LogisticRegressionExplainer(Explainer):
             raise Exception("Model not initialized.")
 
         df = pd.DataFrame(self.sample_f, columns=self.sampler.feature_names())
+
         df["Label"] = self.sample_l
+
+        df["Distances"] = self.distances
+
+        df["Exp. Sim."] = self.exponential_sim
 
         return self.last_decision, df

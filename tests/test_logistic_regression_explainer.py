@@ -3,55 +3,54 @@ from rle.samplers.gaussian_sampler import GaussianSampler
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import make_circles, make_s_curve
 import matplotlib.pyplot as plt
+import scipy.stats as stats
+import seaborn as sns
+import pandas as pd
 import numpy as np
 
-fig, axs = plt.subplots(2, 5, figsize=(11.5, 4.5), sharex=True, sharey=True)
+sns.set_style("whitegrid")
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
 
-axsv = list(axs[0]) + list(axs[1])
+fig, axs = plt.subplots(1, 5, figsize=(10, 2), sharex=True, sharey=True)
+
 # Initializes dataset and variables
-decision = np.array([-0.42, 0.62])
-measures = [0.2000, 0.400, 0.600, 0.800, 1.000,
-            2, 3, 4, 5, 6]
+decision = np.array([0.34, 0.44])
+measures = [0.085, 0.10, 0.15, 0.50, 2]
 
-for measure, i in zip(measures, range(len(axsv))):
+for measure, i in zip(measures, range(len(axs))):
     np.random.seed(1)
-    ax = axsv[i]
-    make_s_curve(n_samples=1000, noise=0.1)
+    ax = axs[i]
+
+    # Initializes peak dataset
+    X = np.random.rand(800, 2)
+    X[:, 0] = (X[:, 0] * 6) - 3
+    X[:, 1] = X[:, 1] / 2
+    y = np.array(list(map(lambda x: int(x[1] < stats.norm.pdf(x[0]) and x[0] < 0), X)))
+    X[:, 0] = (X[:, 0] + 3) / 6
+    X[:, 1] = X[:, 1] * 2
+    X_train, X_test, y_train, y_test = train_test_split(X, y)
+    df = pd.DataFrame(X, columns=["Feature 1", "Feature 2"])
+    df["Label"] = y
 
     # Initializes model
-    X, y = make_circles(noise=0.10, factor=0.6, n_samples=1000)
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
-
     rf = RandomForestClassifier(n_estimators=100)
     rf.fit(X_train, y_train)
 
     # Initializes sampler
     sampler = GaussianSampler(X, ["Feature 1", "Feature 2"], ["numerical", "numerical"],
                               y, "Label", "Categorical",
-                              50, rf.predict_proba)
+                              250, rf.predict_proba)
 
     # Initializes explainer
     explainer = LogisticRegressionExplainer(sampler, measure)
-
-    # Plots decision
-    ax.plot(decision[0], decision[1], "b*", label="Decision")
 
     # Performs Logistic Regression
     weights = explainer.explain(decision)
     last_decision, df = explainer.explanation_data()
 
-    # Plots gaussian sample
-    df[df.Label == 1].plot(kind="scatter", x="Feature 1", y="Feature 2", color="Blue", ax=ax)
-    df[df.Label == 0].plot(kind="scatter", x="Feature 1", y="Feature 2", color="Green", ax=ax)
-
-    # Plots regression line
-    xs = [min(df["Feature 1"].values), max(df["Feature 1"].values)]
-    ys = list(map(lambda x: (-weights[0][1] * x - weights[2][1]) / weights[1][1], xs))
-    ax.plot(xs, ys)
-
-    # Plots exponential kernel
+    # Calculates exponential kernel mesh
     xk = np.arange(min(df["Feature 1"].values), max(df["Feature 1"].values), .025)
     yk = np.arange(min(df["Feature 2"].values), max(df["Feature 2"].values), .025)
     X, Y = np.meshgrid(xk, yk)
@@ -59,10 +58,27 @@ for measure, i in zip(measures, range(len(axsv))):
     distances = pairwise_distances(combined, decision.reshape(1, -1), metric='euclidean')
     exponential_distances = np.sqrt(np.exp(-(distances ** 2) / measure ** 2))
     Z = exponential_distances.reshape(len(X), len(X[0]))
-    cs = ax.contourf(X, Y, Z, alpha=0.3)
+    cs = ax.contourf(X, Y, Z, alpha=0.25, cmap=plt.cm.bone)
+
+    # Plots decision
+    ax.plot(decision[0], decision[1], "b*", label="Decision")
+
+    # Plots regression line
+    xs = np.array([min(df["Feature 1"].values), max(df["Feature 1"].values)])
+    ys = (-weights[0][1] * xs - weights[2][1]) / weights[1][1]
+    ax.plot(xs, ys)
+
+    # Plots gaussian sample
+    df_l0 = df[df.Label == 0]
+    df_l1 = df[df.Label == 1]
+
+    ax.scatter(df_l0["Feature 1"].values, df_l0["Feature 2"].values, s=df_l0["Exp. Sim."].values*10, alpha=0.7)
+    ax.scatter(df_l1["Feature 1"].values, df_l1["Feature 2"].values, s=df_l1["Exp. Sim."].values*10, alpha=0.7)
 
     ax.set_xlim(min(df["Feature 1"].values) + 0.010, max(df["Feature 1"].values) - 0.010)
     ax.set_ylim(min(df["Feature 2"].values) + 0.010, max(df["Feature 2"].values) - 0.010)
-    ax.set_title("Measure: " + str(measure))
+    ax.set_title("$\ell$: " + str(measure))
 
+plt.suptitle("Logistic Regression Explainer with Different Neighborhoods")
+plt.subplots_adjust(wspace=0.25, top=0.7)
 plt.savefig("./imgs/logistic_regression_explainer.pdf", bbox_inches="tight")
