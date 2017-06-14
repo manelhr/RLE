@@ -8,7 +8,7 @@ import pandas
 
 fig, ax = plt.subplots(3, 1, figsize=(7, 6), sharex=True, sharey=True)
 
-X, y = make_circles(noise=0.10, factor=0.6, n_samples=1000)
+X, y = make_circles(noise=0.10, factor=0.8, n_samples=1000)
 decision = np.array([-0.42, 0.62])
 
 # Plots original data
