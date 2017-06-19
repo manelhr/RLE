@@ -68,3 +68,5 @@ plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.suptitle("Gaussian Sampling around the Neighborhood of a Decision")
 plt.subplots_adjust(wspace=0.25, top=0.7)
 plt.savefig("./imgs/gaussian_sampler.pdf", bbox_inches="tight")
+
+

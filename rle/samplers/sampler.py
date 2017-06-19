@@ -37,7 +37,7 @@ class Sampler(VerboseObject):
         # initializes label related variables
         self.label, self.l_name, self.l_type = label, l_name, l_type
 
-        self.num_samples = num_samples
+        self.num_samples = int(num_samples)
         self.classifier_fn = classifier_fn
 
         super().__init__(verbose)

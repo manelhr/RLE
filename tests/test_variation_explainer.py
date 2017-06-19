@@ -13,16 +13,21 @@ sns.set_style("whitegrid")
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 
-fig, axs = plt.subplots(1, 5, figsize=(10, 2), sharey=True)
+fig, axs = plt.subplots(1, 3, figsize=(10, 2.5), sharex=True, sharey=True)
 
-# Initializes dataset and variables
+# Initializes dataset and sample_size/mesh variables
 decision = np.array([0.34, 0.44])
-sample_sizes = [50, 75, 100, 250, 500]
 measure = 0.15
+sample_sizes = np.arange(10, 500, 10)
+measures = np.arange(0.05, 5, 0.05)
+X_mesh, Y_mesh = np.meshgrid(sample_sizes, measures)
+combined = np.stack([X_mesh.ravel(), Y_mesh.ravel()], axis=-1)
+intercept = []
+feature1 = []
+feature2 = []
 
-for sample_size, i in zip(sample_sizes, range(len(axs))):
+for sample_size, measure in combined:
     np.random.seed(1)
-    ax = axs[i]
 
     # Initializes peak dataset
     X = np.random.rand(800, 2)
@@ -49,27 +54,23 @@ for sample_size, i in zip(sample_sizes, range(len(axs))):
 
     # Performs Logistic Regression
     weights = explainer.explain(decision)
-    last_decision, df = explainer.explanation_data()
 
-    # Plots decision
-    ax.plot(decision[0], decision[1], "b*", label="Decision")
+    # Store results
+    feature1.append(weights[0][1])
+    feature2.append(weights[1][1])
+    intercept.append(weights[2][1])
 
-    # Plots regression line
-    xs = np.array([min(df["Feature 1"].values), max(df["Feature 1"].values)])
-    ys = (-weights[0][1] * xs - weights[2][1]) / weights[1][1]
-    ax.plot(xs, ys)
+for array_v, ax, title in zip([feature1, feature2, intercept], axs, ["Feature 1", "Feature 2", "Intercept"]):
+    Z = np.array(array_v).reshape(len(X_mesh), len(X_mesh[0]))
+    cs = ax.contourf(X_mesh, Y_mesh, Z, alpha=0.7, cmap=plt.cm.bone)
+    ax.set_title(title)
 
-    # Plots gaussian sample
-    df_l0 = df[df.Label == 0]
-    df_l1 = df[df.Label == 1]
+axs[1].set_xlabel("Sample Size ($s$)")
+axs[0].set_ylabel("Neighborhood ($\ell$)")
 
-    ax.scatter(df_l0["Feature 1"].values, df_l0["Feature 2"].values, s=df_l0["Exp. Sim."].values*10, alpha=0.7)
-    ax.scatter(df_l1["Feature 1"].values, df_l1["Feature 2"].values, s=df_l1["Exp. Sim."].values*10, alpha=0.7)
+plt.suptitle("Log. Regression Weights w.r.t. Neighborhood and Sample Size")
+cbar_ax = fig.add_axes([0.85, 0.10, 0.05, 0.7])
+fig.colorbar(cs, cax=cbar_ax)
+plt.subplots_adjust(wspace=0.25, top=0.8, right=0.8)
+plt.savefig("./imgs/logistic_regression_explainer_variation.pdf", bbox_inches="tight")
 
-    ax.set_xlim(min(df["Feature 1"].values) + 0.010, max(df["Feature 1"].values) - 0.010)
-    ax.set_ylim(min(df["Feature 2"].values) + 0.010, max(df["Feature 2"].values) - 0.010)
-    ax.set_title("$s$: " + str(sample_size))
-
-plt.suptitle("Logistic Regression Explainer with Different Sample Sizes ($\ell = 0.15$)")
-plt.subplots_adjust(wspace=0.25, top=0.7)
-plt.savefig("./imgs/logistic_regression_explainer_sampling.pdf", bbox_inches="tight")
