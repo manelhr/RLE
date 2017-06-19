@@ -22,7 +22,7 @@ sample_sizes = np.arange(10, 500, 10)
 measures = np.arange(0.05, 5, 0.05)
 X_mesh, Y_mesh = np.meshgrid(sample_sizes, measures)
 combined = np.stack([X_mesh.ravel(), Y_mesh.ravel()], axis=-1)
-intercept = []
+accuracy = []
 feature1 = []
 feature2 = []
 
@@ -58,9 +58,9 @@ for sample_size, measure in combined:
     # Store results
     feature1.append(weights[0][1])
     feature2.append(weights[1][1])
-    intercept.append(explainer.metrics())
+    accuracy.append(explainer.metrics())
 
-for array_v, ax, title in zip([feature1, feature2, intercept], axs, ["Feature 1", "Feature 2", "Intercept"]):
+for array_v, ax, title in zip([feature1, feature2, accuracy], axs, ["Feature 1", "Feature 2", "Accuracy"]):
     Z = np.array(array_v).reshape(len(X_mesh), len(X_mesh[0]))
     cs = ax.contourf(X_mesh, Y_mesh, Z, alpha=0.7, cmap=plt.cm.bone)
     ax.set_title(title)
