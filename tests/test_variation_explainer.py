@@ -58,7 +58,7 @@ for sample_size, measure in combined:
     # Store results
     feature1.append(weights[0][1])
     feature2.append(weights[1][1])
-    intercept.append(weights[2][1])
+    intercept.append(explainer.metrics())
 
 for array_v, ax, title in zip([feature1, feature2, intercept], axs, ["Feature 1", "Feature 2", "Intercept"]):
     Z = np.array(array_v).reshape(len(X_mesh), len(X_mesh[0]))
@@ -68,7 +68,7 @@ for array_v, ax, title in zip([feature1, feature2, intercept], axs, ["Feature 1"
 axs[1].set_xlabel("Sample Size ($s$)")
 axs[0].set_ylabel("Neighborhood ($\ell$)")
 
-plt.suptitle("Log. Regression Weights w.r.t. Neighborhood and Sample Size")
+plt.suptitle("Weights and Accuracy w.r.t. Neighborhood and Sample Size")
 cbar_ax = fig.add_axes([0.85, 0.10, 0.05, 0.7])
 fig.colorbar(cs, cax=cbar_ax)
 plt.subplots_adjust(wspace=0.25, top=0.8, right=0.8)

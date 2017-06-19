@@ -1,6 +1,7 @@
 from rle.explainers.explainer import Explainer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics.pairwise import pairwise_distances
+from sklearn.metrics import accuracy_score
 import numpy as np
 import pandas as pd
 
@@ -26,6 +27,8 @@ class LogisticRegressionExplainer(Explainer):
         self.model = LogisticRegression()
 
         self.sample_f, self.sample_l, self.last_decision = None, None, None
+
+        self.pred_l = None
 
         self.exponential_sim, self.distances = None, None
 
@@ -75,3 +78,14 @@ class LogisticRegressionExplainer(Explainer):
         df["Exp. Sim."] = self.exponential_sim
 
         return self.last_decision, df
+
+    def metrics(self, given_function=False):
+        """
+        This provides the metrics on the model on the last sampled neighborhood.
+        :param given_function: possibly a function that receives y_true, y_pred and return some metric.
+        :return: the accuracy score or custom metric.
+        """
+
+        self.pred_l = self.model.predict(self.sample_f)
+        f = accuracy_score if not given_function else given_function
+        return f(self.sample_l, self.pred_l)

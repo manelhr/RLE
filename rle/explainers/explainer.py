@@ -1,7 +1,6 @@
 import abc
 from rle.util.verbose_object import VerboseObject
 
-
 class Explainer(VerboseObject):
     """
     This is the abstract class that needs to be extended to implement the explainers for different models.
@@ -39,3 +38,5 @@ class Explainer(VerboseObject):
         """
 
         pass
+
+
