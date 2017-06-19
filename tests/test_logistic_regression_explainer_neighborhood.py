@@ -79,6 +79,6 @@ for measure, i in zip(measures, range(len(axs))):
     ax.set_ylim(min(df["Feature 2"].values) + 0.010, max(df["Feature 2"].values) - 0.010)
     ax.set_title("$\ell$: " + str(measure))
 
-plt.suptitle("Logistic Regression Explainer with Different Neighborhoods")
+plt.suptitle("Logistic Regression Explainer with Different Neighborhoods ($s = 250$)")
 plt.subplots_adjust(wspace=0.25, top=0.7)
-plt.savefig("./imgs/logistic_regression_explainer.pdf", bbox_inches="tight")
+plt.savefig("./imgs/logistic_regression_explainer_neighborhood.pdf", bbox_inches="tight")
