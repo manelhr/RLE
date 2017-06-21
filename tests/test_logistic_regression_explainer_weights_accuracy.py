@@ -72,4 +72,3 @@ cbar_ax = fig.add_axes([0.85, 0.10, 0.05, 0.7])
 fig.colorbar(cs, cax=cbar_ax)
 plt.subplots_adjust(wspace=0.25, top=0.8, right=0.8)
 plt.savefig("./imgs/logistic_regression_explainer_variation.pdf", bbox_inches="tight")
-
