@@ -6,6 +6,20 @@ class DepicterBar(Depicter):
     This abstract class depicts any explainer that has weights.
     """
 
-    def depict(self, explainer):
+    def __init__(self,
+                 destination=None,
+                 verbose=False):
+        """
+        defined@Depicter
+        """
+
+        super().__init__(destination, verbose)
+
+    def depict(self, explanation_result):
+        """
+        defined@Sampler This specific class depicts is as a bar chart.
+        :param explanation_result: defined@Sampler
+        :return: defined@Sampler
+        """
 
         pass

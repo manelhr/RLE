@@ -10,11 +10,24 @@ class Depicter(VerboseObject):
     __metaclass__ = abc.ABCMeta
 
     def __init__(self,
+                 destination=None,
                  verbose=False):
+        """
+        This initializes the depicter with its destination, if the destination is None plot will be shown on terminal.
+        :param destination: possible destination for the object.
+        :param verbose: defined@VerboseObject
+        """
+
+        self.destination = destination
 
         super().__init__(verbose)
 
     @abc.abstractmethod
-    def depict(self, explainer):
+    def depict(self, explanation_result):
+        """
+        This depicts an explanation result in any sort of way.
+        :param explanation_result: dictionary with the aspects of the result of an explanation.
+        :return: Nothing
+        """
 
         pass

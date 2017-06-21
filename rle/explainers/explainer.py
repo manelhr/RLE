@@ -40,4 +40,11 @@ class Explainer(VerboseObject):
 
         pass
 
+    @abc.abstractmethod
+    def explanation_result(self):
+        """
+        This function returns the explanation result to be used by the depicted.
+        :return: explanation result.
+        """
 
+        pass

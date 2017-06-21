@@ -14,6 +14,7 @@ class Explanation(VerboseObject):
                  explainer,
                  sampler,
                  depicter=None,
+                 destination=None,
                  num_samples=500,
                  measure=1,
                  verbose=False):
@@ -48,14 +49,43 @@ class Explanation(VerboseObject):
         self._explainer = explainer(self._sampler, measure, verbose)
 
         # Initializes standard depicter
-        self._depicter = depicter
+        if depicter is not None:
+            self._depicter = depicter(destination)
+        else:
+            self._depicter = None
 
         # Initializes the result of an explanation
         self._exp_result = None
 
         super().__init__(verbose)
 
-    def sample_explain_depict(self, decision, num_samples=None, measure=None):
+    def sample_explain_depict(self, decision, num_samples=None, measure=None,  depict=True):
+        """
+        This method samples the explanation calculates the metrics, and if the depict parameter is not False, depicts.
+        :param decision: decision of interest.
+        :param num_samples: number of samples to be sampled by the sampler.
+        :param measure: measure to be used in the model.
+        :param depict: either a boolean (if false doesn't depict, if true depicts) or a custom depicter.
+        :return: if depict is False, the explanation result, else, nothing.
+        """
 
-        # Sample and explain
+        # Sample explain
         self._explainer.explain(decision, num_samples, measure)
+
+        # Calculate metrics
+        self._explainer.metrics()
+
+        # Get explanation result
+        self._exp_result = self._explainer.explanation_result()
+
+        if depict is False:
+            return self._exp_result
+
+        elif depict is True:
+            if self._depicter is None:
+                raise Exception("No depicter given.")
+            else:
+                self._depicter.depict(self._exp_result)
+
+        else:
+            depict(self._exp_result)

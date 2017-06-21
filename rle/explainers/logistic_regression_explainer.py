@@ -20,7 +20,7 @@ class LogisticRegressionExplainer(Explainer):
 
         :param sampler: defined@Explainer
         :param measure: defined@Explainer
-        :param verbose: defined@Explainer
+        :param verbose: defined@VerboseObject
         :return defined@Explainer
         """
 
@@ -30,7 +30,9 @@ class LogisticRegressionExplainer(Explainer):
 
         self.pred_l = None
 
-        self.exponential_sim, self.distances, self.explanation_result = None, None, None
+        self.exponential_sim, self.distances = None, None
+
+        self.weights, self.metric = None, None
 
         super().__init__(sampler, measure, verbose)
 
@@ -43,6 +45,7 @@ class LogisticRegressionExplainer(Explainer):
 
         :param decision: the point of interest to be explained.
         :param measure: if not none, replace the standard measure.
+        :param num_samples: number of samples to be used in the sampler.
         :return: array with tuples ('feature', importance) where importance is a real number amd sum(importances) = 1.
         """
 
@@ -58,9 +61,9 @@ class LogisticRegressionExplainer(Explainer):
 
         self.model.fit(self.sample_f, self.sample_l, sample_weight=self.exponential_sim)
 
-        self.explanation_result = list(zip(self.sampler.feature_names(),
-                                           list(self.model.coef_)[0])) + \
-                                  [('Intercept', self.model.intercept_[0])]
+        self.weights = list(zip(self.sampler.feature_names(),
+                                list(self.model.coef_)[0])) + \
+                       [('Intercept', self.model.intercept_[0])]
 
         return self.explanation_result
 
@@ -93,4 +96,24 @@ class LogisticRegressionExplainer(Explainer):
         self.pred_l = self.model.predict(self.sample_f)
         f = accuracy_score if not given_function else given_function
 
+        self.metric = f(self.sample_l, self.pred_l)
+
         return f(self.sample_l, self.pred_l)
+
+    def explanation_result(self):
+        """
+        defined@Explainer
+
+        :return: dictionary with weights and evaluation metric of the model.
+        """
+
+        if self.sample_f is None or self.sample_l is None:
+            raise Exception("Model not initialized.")
+
+        if self.weights is None:
+            raise Exception("Model not fitted.")
+
+        if self.metric is None:
+            raise Exception("Metric not calculated.")
+
+        return {"weights": self.weights, "metric": self.metric}
