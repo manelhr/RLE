@@ -30,13 +30,14 @@ class LogisticRegressionExplainer(Explainer):
 
         self.pred_l = None
 
-        self.exponential_sim, self.distances = None, None
+        self.exponential_sim, self.distances, self.explanation_result = None, None, None
 
         super().__init__(sampler, measure, verbose)
 
     def explain(self,
                 decision,
-                measure=None):
+                measure=None,
+                num_samples=None):
         """
         defined@Explainer We use a weighted logistic regression, where the weights are given by a exponential kernel.
 
@@ -49,7 +50,7 @@ class LogisticRegressionExplainer(Explainer):
 
         self.last_decision = decision
 
-        self.sample_f, self.sample_l = self.sampler.sample(decision)
+        self.sample_f, self.sample_l = self.sampler.sample(decision, num_samples)
 
         self.distances = pairwise_distances(self.sample_f, decision.reshape(1, -1), metric='euclidean').ravel()
 
@@ -57,8 +58,11 @@ class LogisticRegressionExplainer(Explainer):
 
         self.model.fit(self.sample_f, self.sample_l, sample_weight=self.exponential_sim)
 
-        return list(zip(self.sampler.feature_names(),
-                        list(self.model.coef_)[0])) + [('Intercept', self.model.intercept_[0])]
+        self.explanation_result = list(zip(self.sampler.feature_names(),
+                                           list(self.model.coef_)[0])) + \
+                                  [('Intercept', self.model.intercept_[0])]
+
+        return self.explanation_result
 
     def explanation_data(self):
         """
@@ -88,4 +92,5 @@ class LogisticRegressionExplainer(Explainer):
 
         self.pred_l = self.model.predict(self.sample_f)
         f = accuracy_score if not given_function else given_function
+
         return f(self.sample_l, self.pred_l)
