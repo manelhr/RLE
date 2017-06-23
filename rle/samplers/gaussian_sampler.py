@@ -38,6 +38,7 @@ class GaussianSampler(Sampler):
                          verbose)
 
         self.scaler = StandardScaler(with_mean=False)
+
         self.scaler.fit(features)
 
     def sample(self,
@@ -52,7 +53,11 @@ class GaussianSampler(Sampler):
         """
 
         ns = int(num_samples) if num_samples is not None else self.num_samples
+
+        self.num_samples = ns
+
         s_features = np.random.normal(0, 1, ns * instance.shape[0])
+
         s_features = s_features.reshape(ns, instance.shape[0]) * self.scaler.scale_ + instance
 
         s_labels = np.array([np.argmax(inst) for inst in self.classifier_fn(s_features)])

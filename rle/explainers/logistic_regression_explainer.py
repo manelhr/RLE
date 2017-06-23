@@ -51,6 +51,8 @@ class LogisticRegressionExplainer(Explainer):
 
         ms = measure if measure is not None else self.measure
 
+        self.measure = ms
+
         self.last_decision = decision
 
         self.sample_f, self.sample_l = self.sampler.sample(decision, num_samples)
@@ -116,4 +118,7 @@ class LogisticRegressionExplainer(Explainer):
         if self.metric is None:
             raise Exception("Metric not calculated.")
 
-        return {"weights": self.weights, "metric": self.metric}
+        return {"weights": self.weights,
+                "metric": self.metric,
+                "measure": self.measure,
+                "num_sam": self.sampler.num_samples}

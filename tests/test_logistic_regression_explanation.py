@@ -1,4 +1,5 @@
 from rle.explainers.logistic_regression_explainer import LogisticRegressionExplainer
+from rle.depicters.depicter_bar_weights import DepicterBarWeights
 from rle.samplers.gaussian_sampler import GaussianSampler
 from sklearn.model_selection import train_test_split
 from rle.explanation.explanation import Explanation
@@ -21,12 +22,16 @@ df["Label"] = y
 # Initializes decision
 decision = np.array([0.34, 0.44])
 
+#
+destination = "./imgs/logistic_regression_explanation.pdf"
+
 # Initializes explainer
 exp = Explanation(X_train, ["Feature 1", "Feature 2"], None,
                   y_train, "Label", None,
                   model=RandomForestClassifier(n_estimators=100),
                   explainer=LogisticRegressionExplainer,
                   sampler=GaussianSampler,
-                  depicter=None)
+                  depicter=DepicterBarWeights,
+                  destination=destination)
 
-exp.sample_explain_depict(decision)
+exp.sample_explain_depict(decision, depict=True)

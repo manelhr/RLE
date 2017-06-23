@@ -88,4 +88,4 @@ class Explanation(VerboseObject):
                 self._depicter.depict(self._exp_result)
 
         else:
-            depict(self._exp_result)
+            depict.depict(self._exp_result)
