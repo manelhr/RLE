@@ -63,7 +63,7 @@ class LogisticRegressionExplainer(Explainer):
                                 list(self.model.coef_)[0])) + \
                        [('Intercept', self.model.intercept_[0])]
 
-        return self.explanation_result
+        return self.weights
 
     def explanation_data(self):
         """ This provides the data on the explanation of the last explanation given.
