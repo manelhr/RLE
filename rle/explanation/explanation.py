@@ -16,7 +16,7 @@ class Explanation(VerboseObject):
                  num_samples=500,
                  measure=1,
                  verbose=False):
-        """
+        """ Initializes the explainer.
         :param features: a np.array of np.arrays containing the different features.
         :param f_names: a list with the strings of the names features.
         :param f_types: a list with the data types of the features.
