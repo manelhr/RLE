@@ -6,8 +6,7 @@ import numpy as np
 
 @inherit_docstring
 class GaussianSampler(Sampler):
-    """
-    This class implements a sampler based on generating a gaussian distribution around the point to be explained.
+    """ This class implements a sampler based on generating a gaussian distribution around the point to be explained.
         Restrictions:
         1) Needs classifier prediction probability function.
         2) Can only be used with numerical features.
@@ -18,8 +17,7 @@ class GaussianSampler(Sampler):
                  label, l_name, l_type,
                  num_samples, classifier_fn,
                  verbose=False):
-        """
-        defined@Sampler Also initializes distances metrics.
+        """ defined@Sampler Also initializes distances metrics.
 
         :param features: defined@Sampler
         :param f_names: defined@Sampler
@@ -44,8 +42,7 @@ class GaussianSampler(Sampler):
     def sample(self,
                instance,
                num_samples=None):
-        """
-        defined@Sampler
+        """ defined@Sampler
 
         :param instance: defined@Sampler
         :param num_samples: defined@Sampler

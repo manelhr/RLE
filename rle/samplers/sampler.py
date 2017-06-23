@@ -3,9 +3,7 @@ from rle.util.verbose_object import VerboseObject
 
 
 class Sampler(VerboseObject):
-    """
-    This is the abstract class that needs to be extended to implement the samplers for different models.
-    """
+    """ This is the abstract class that needs to be extended to implement the samplers for different models. """
 
     __metaclass__ = abc.ABCMeta
 
@@ -14,9 +12,8 @@ class Sampler(VerboseObject):
                  label, l_name, l_type,
                  num_samples, classifier_fn,
                  verbose=False):
-        """
-        Initializes a sampler with attributes related to a dataset's features and its label. Only Work for datasets with
-        only one label.
+        """ Initializes a sampler with attributes related to a dataset's features and its label. Only Work for datasets
+        with only one label.
 
         :param features: a np.array of np.arrays containing the different features.
         :param f_names: a list with the strings of the names features.
@@ -44,8 +41,7 @@ class Sampler(VerboseObject):
 
     @abc.abstractmethod
     def sample(self, instance, num_samples=None):
-        """
-        This method creates samples to an instance, based on the desired method of sampling.
+        """ This method creates samples to an instance, based on the desired method of sampling.
 
         :param instance: numpy array with instance to be sampled.
         :param num_samples: if not None, replace the standard number of samples.
@@ -54,8 +50,7 @@ class Sampler(VerboseObject):
         pass
 
     def feature_names(self):
-        """
-        Getter for the feature names.
+        """ Getter for the feature names.
 
         :return: f_names arrays.
         """

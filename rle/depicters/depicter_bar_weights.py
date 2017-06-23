@@ -1,28 +1,23 @@
-import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 from rle.depicters.depicter import Depicter
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 
 
 class DepicterBarWeights(Depicter):
-    """
-    This abstract class depicts any explainer that has weights.
-    """
+    """ This abstract class depicts any explainer that has weights. """
 
     def __init__(self,
                  destination=None,
                  verbose=False):
-        """
-        defined@Depicter
-        """
+        """ defined@Depicter """
 
         super().__init__(destination, verbose)
 
     def depict(self, explanation_result):
-        """
-        defined@Sampler This specific class depicts is as a bar chart.
-        :param explanation_result: defined@Sampler
-        :return: defined@Sampler
+        """ Depicts explanation with weights as a bar chart.
+        :param explanation_result: defined@Depicter
+        :return: defined@Depicter
         """
 
         sns.set_style("whitegrid")
@@ -50,8 +45,6 @@ class DepicterBarWeights(Depicter):
         ax.set_title("Acc:" + str(explanation_result['metric']) + " / " +
                      "$l$:" + str(explanation_result['measure']) + " / " +
                      "$n$:" + str(explanation_result['num_sam']))
-
-
 
         if self.destination is not None:
             plt.savefig(self.destination, bbox_inches="tight")

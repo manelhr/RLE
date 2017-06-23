@@ -3,9 +3,7 @@ from sklearn.model_selection import train_test_split
 
 
 class Explanation(VerboseObject):
-    """
-    This class does everything samples, explains and depicts.
-    """
+    """ This class does everything: samples, explains and depicts. """
 
     def __init__(self,
                  features, f_names, f_types,
@@ -60,8 +58,7 @@ class Explanation(VerboseObject):
         super().__init__(verbose)
 
     def sample_explain_depict(self, decision, num_samples=None, measure=None,  depict=True):
-        """
-        This method samples the explanation calculates the metrics, and if the depict parameter is not False, depicts.
+        """ This method samples the explanation calculates the metrics. If the depict parameter is not False, depicts.
         :param decision: decision of interest.
         :param num_samples: number of samples to be sampled by the sampler.
         :param measure: measure to be used in the model.

@@ -22,7 +22,7 @@ df["Label"] = y
 # Initializes decision
 decision = np.array([0.34, 0.44])
 
-#
+# Initializes destination for the image
 destination = "./imgs/logistic_regression_explanation.pdf"
 
 # Initializes explainer
@@ -34,4 +34,5 @@ exp = Explanation(X_train, ["Feature 1", "Feature 2"], None,
                   depicter=DepicterBarWeights,
                   destination=destination)
 
+# Samples, explains and depict
 exp.sample_explain_depict(decision, depict=True)

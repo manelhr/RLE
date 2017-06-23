@@ -1,6 +1,5 @@
 from rle.explainers.logistic_regression_explainer import LogisticRegressionExplainer
 from rle.samplers.gaussian_sampler import GaussianSampler
-from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt

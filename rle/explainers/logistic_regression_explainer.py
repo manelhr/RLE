@@ -1,22 +1,19 @@
-from rle.explainers.explainer import Explainer
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics.pairwise import pairwise_distances
+from sklearn.linear_model import LogisticRegression
+from rle.explainers.explainer import Explainer
 from sklearn.metrics import accuracy_score
-import numpy as np
 import pandas as pd
+import numpy as np
 
 
 class LogisticRegressionExplainer(Explainer):
-    """
-    This class explains a decision with a weighted logistic regression, using a exponential kernel for weighting.
-    """
+    """ This class explains a decision with a weighted logistic regression, w/ a exponential kernel for weighting. """
 
     def __init__(self,
                  sampler,
                  measure,
                  verbose=False):
-        """
-        defined@Explainer This initializes the logistic regression.
+        """ defined@Explainer This initializes the logistic regression.
 
         :param sampler: defined@Explainer
         :param measure: defined@Explainer
@@ -40,8 +37,7 @@ class LogisticRegressionExplainer(Explainer):
                 decision,
                 measure=None,
                 num_samples=None):
-        """
-        defined@Explainer We use a weighted logistic regression, where the weights are given by a exponential kernel.
+        """ defined@Explainer We use a weighted logistic regression, where weights are given by a exponential kernel.
 
         :param decision: the point of interest to be explained.
         :param measure: if not none, replace the standard measure.
@@ -70,8 +66,8 @@ class LogisticRegressionExplainer(Explainer):
         return self.explanation_result
 
     def explanation_data(self):
-        """
-        This provides the data on the explanation of the last explanation given.
+        """ This provides the data on the explanation of the last explanation given.
+
         :return: decision and dataframe with the samples/labels.
         """
 
@@ -89,8 +85,8 @@ class LogisticRegressionExplainer(Explainer):
         return self.last_decision, df
 
     def metrics(self, given_function=False):
-        """
-        This provides the metrics on the model on the last sampled neighborhood.
+        """ This provides the metrics on the model on the last sampled neighborhood.
+
         :param given_function: possibly a function that receives y_true, y_pred and return some metric.
         :return: the accuracy score or custom metric.
         """
@@ -103,8 +99,7 @@ class LogisticRegressionExplainer(Explainer):
         return f(self.sample_l, self.pred_l)
 
     def explanation_result(self):
-        """
-        defined@Explainer
+        """  defined@Explainer
 
         :return: dictionary with weights and evaluation metric of the model.
         """
