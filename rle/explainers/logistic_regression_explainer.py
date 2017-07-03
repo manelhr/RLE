@@ -2,7 +2,7 @@ from sklearn.linear_model import LogisticRegression
 from rle.explainers.explainer import Explainer
 from sklearn.metrics import accuracy_score
 import pandas as pd
-
+from functools import partial
 
 class LogisticRegressionExplainer(Explainer):
     """ This class explains a decision with a weighted logistic regression, w/ a exponential kernel for weighting. """
@@ -25,7 +25,7 @@ class LogisticRegressionExplainer(Explainer):
 
         self.exponential_sim, self.distances = None, None
 
-        self.weights, self.metric = None, None
+        self.weights, self.metric, self.measure, self.num_samples = None, None, None, None
 
         super().__init__(sampler, verbose)
 
@@ -41,9 +41,11 @@ class LogisticRegressionExplainer(Explainer):
         :return: array with tuples ('feature', importance) where importance is a real number amd sum(importances) = 1.
         """
 
+        self.measure = self.sampler.measure if measure is None else measure
+        self.num_samples = self.sampler.num_samples if num_samples is None else num_samples
         self.last_decision = decision
 
-        self.sample_f, self.sample_l, self.exponential_sim = self.sampler.sample(decision, num_samples)
+        self.sample_f, self.sample_l, self.exponential_sim = self.sampler.sample(decision, num_samples, measure)
 
         self.model.fit(self.sample_f, self.sample_l, sample_weight=self.exponential_sim)
 
@@ -78,7 +80,7 @@ class LogisticRegressionExplainer(Explainer):
         """
 
         self.pred_l = self.model.predict(self.sample_f)
-        f = accuracy_score if not given_function else given_function
+        f = partial(accuracy_score, sample_weight=self.exponential_sim) if not given_function else given_function
 
         self.metric = f(self.sample_l, self.pred_l)
 
@@ -101,5 +103,5 @@ class LogisticRegressionExplainer(Explainer):
 
         return {"weights": self.weights,
                 "metric": self.metric,
-                "measure": self.sampler.measure,
-                "num_sam": self.sampler.num_samples}
+                "measure": self.measure,
+                "num_sam": self.num_samples}

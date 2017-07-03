@@ -20,9 +20,10 @@ class Depicter(VerboseObject):
         super().__init__(verbose)
 
     @abc.abstractmethod
-    def depict(self, explanation_result):
+    def depict(self, explanation_result, axis):
         """ This depicts an explanation result in any sort of way.
         :param explanation_result: dictionary with the aspects of the result of an explanation.
+        :param axis: matplotlib sub axis where the depiction should be plotted.
         :return: nothing.
         """
 

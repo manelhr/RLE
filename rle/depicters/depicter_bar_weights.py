@@ -14,9 +14,10 @@ class DepicterBarWeights(Depicter):
 
         super().__init__(destination, verbose)
 
-    def depict(self, explanation_result):
+    def depict(self, explanation_result, axis=None):
         """ Depicts explanation with weights as a bar chart.
         :param explanation_result: defined@Depicter
+        :param axis: defined@Depicter
         :return: defined@Depicter
         """
 
@@ -36,7 +37,11 @@ class DepicterBarWeights(Depicter):
         # the bar centers on the y axis
         pos = np.arange(count) + .5
 
-        fig, ax = plt.subplots(1, figsize=(4, 4))
+        if axis is None:
+            fig, ax = plt.subplots(1, figsize=(4, 4))
+        else:
+            ax = axis
+
         ax.barh(pos, weights, color="green", alpha=0.6, align='center')
         ax.set_yticks(pos)
         ax.set_yticklabels(labels)
@@ -46,7 +51,9 @@ class DepicterBarWeights(Depicter):
                      "$l$:" + str(explanation_result['measure']) + " / " +
                      "$n$:" + str(explanation_result['num_sam']))
 
-        if self.destination is not None:
+        if axis is not None:
+            return
+        elif self.destination is not None:
             plt.savefig(self.destination, bbox_inches="tight")
         else:
             plt.show()

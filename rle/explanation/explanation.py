@@ -64,12 +64,13 @@ class Explanation(VerboseObject):
 
         super().__init__(verbose)
 
-    def sample_explain_depict(self, decision, num_samples=None, measure=None,  depict=True):
+    def sample_explain_depict(self, decision, num_samples=None, measure=None,  depict=True, axis=None):
         """ This method samples the explanation calculates the metrics. If the depict parameter is not False, depicts.
         :param decision: decision of interest.
         :param num_samples: number of samples to be sampled by the sampler.
         :param measure: measure to be used in the model.
         :param depict: either a boolean (if false doesn't depict, if true depicts) or a custom depicter.
+        :param axis: matplotlib sub axis where the depiction should be plotted.
         :return: if depict is False, the explanation result, else, nothing.
         """
 
@@ -89,7 +90,7 @@ class Explanation(VerboseObject):
             if self._depicter is None:
                 raise Exception("No depicter given.")
             else:
-                self._depicter.depict(self._exp_result)
+                self._depicter.depict(self._exp_result, axis)
 
         else:
-            depict.depict(self._exp_result)
+            depict.depict(self._exp_result, axis)

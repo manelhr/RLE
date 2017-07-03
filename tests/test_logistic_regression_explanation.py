@@ -1,12 +1,18 @@
 from rle.explainers.logistic_regression_explainer import LogisticRegressionExplainer
-from rle.depicters.depicter_bar_weights import DepicterBarWeights
 from rle.samplers.gaussian_exponential_sampler import GaussianExponentialSampler
+from rle.depicters.depicter_bar_weights import DepicterBarWeights
 from sklearn.model_selection import train_test_split
 from rle.explanation.explanation import Explanation
 from sklearn.ensemble import RandomForestClassifier
+import matplotlib.pyplot as plt
 import scipy.stats as stats
 import pandas as pd
+import seaborn as sns
 import numpy as np
+
+sns.set_style("whitegrid")
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
 
 # Initializes peak dataset
 X = np.random.rand(800, 2)
