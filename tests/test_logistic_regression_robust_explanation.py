@@ -52,6 +52,8 @@ axs[0].scatter(df_l1["F1"].values, df_l1["F2"].values, alpha=0.4)
 axs[0].set_title("(a) Model Prediction")
 axs[0].set_xlim(min(df["F1"].values) + 0.010, max(df["F1"].values) - 0.010)
 axs[0].set_ylim(min(df["F2"].values) + 0.010, max(df["F2"].values) - 0.010)
+axs[0].set_xlabel("F1")
+axs[0].set_ylabel("F2")
 
 # Initializes explainer
 exp = Explanation(X_train, ["F1", "F2"], None,
@@ -79,10 +81,12 @@ for i in linspace:
 
 axs[1].set_title("(b) Weighted Accuracy")
 axs[1].plot(linspace, metric,  '--', label="Acc")
+axs[1].set_xlabel("$\ell$")
 
 axs[2].set_title("(c) Feature Values (\%)")
 axs[2].plot(linspace, weight[0], label="F1")
 axs[2].plot(linspace, weight[1], label="F2")
+axs[2].set_xlabel("$\ell$")
 
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.suptitle("Multiples Explanations for Values of $\ell$")
