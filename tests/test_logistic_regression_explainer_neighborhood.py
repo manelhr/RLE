@@ -1,5 +1,5 @@
 from rle.explainers.logistic_regression_explainer import LogisticRegressionExplainer
-from rle.samplers.gaussian_sampler import GaussianSampler
+from rle.samplers.gaussian_exponential_sampler import GaussianExponentialSampler
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -18,6 +18,7 @@ fig, axs = plt.subplots(1, 5, figsize=(10, 2), sharex=True, sharey=True)
 # Initializes dataset and variables
 decision = np.array([0.34, 0.44])
 measures = [0.085, 0.10, 0.15, 0.50, 2]
+sample_size = 250
 
 for measure, i in zip(measures, range(len(axs))):
     np.random.seed(1)
@@ -39,9 +40,9 @@ for measure, i in zip(measures, range(len(axs))):
     rf.fit(X_train, y_train)
 
     # Initializes sampler
-    sampler = GaussianSampler(X, ["Feature 1", "Feature 2"], ["numerical", "numerical"],
-                              y, "Label", "Categorical",
-                              250, rf.predict_proba)
+    sampler = GaussianExponentialSampler(X, ["Feature 1", "Feature 2"], ["numerical", "numerical"],
+                                         y, "Label", "Categorical",
+                                         sample_size, measure, rf.predict_proba)
 
     # Initializes explainer
     explainer = LogisticRegressionExplainer(sampler, measure)

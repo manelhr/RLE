@@ -1,9 +1,7 @@
-from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.linear_model import LogisticRegression
 from rle.explainers.explainer import Explainer
 from sklearn.metrics import accuracy_score
 import pandas as pd
-import numpy as np
 
 
 class LogisticRegressionExplainer(Explainer):
@@ -11,12 +9,10 @@ class LogisticRegressionExplainer(Explainer):
 
     def __init__(self,
                  sampler,
-                 measure,
                  verbose=False):
         """ defined@Explainer This initializes the logistic regression.
 
         :param sampler: defined@Explainer
-        :param measure: defined@Explainer
         :param verbose: defined@VerboseObject
         :return defined@Explainer
         """
@@ -31,7 +27,7 @@ class LogisticRegressionExplainer(Explainer):
 
         self.weights, self.metric = None, None
 
-        super().__init__(sampler, measure, verbose)
+        super().__init__(sampler, verbose)
 
     def explain(self,
                 decision,
@@ -45,17 +41,9 @@ class LogisticRegressionExplainer(Explainer):
         :return: array with tuples ('feature', importance) where importance is a real number amd sum(importances) = 1.
         """
 
-        ms = measure if measure is not None else self.measure
-
-        self.measure = ms
-
         self.last_decision = decision
 
-        self.sample_f, self.sample_l = self.sampler.sample(decision, num_samples)
-
-        self.distances = pairwise_distances(self.sample_f, decision.reshape(1, -1), metric='euclidean').ravel()
-
-        self.exponential_sim = np.sqrt(np.exp(-(self.distances ** 2) / ms ** 2))
+        self.sample_f, self.sample_l, self.exponential_sim = self.sampler.sample(decision, num_samples)
 
         self.model.fit(self.sample_f, self.sample_l, sample_weight=self.exponential_sim)
 
@@ -77,8 +65,6 @@ class LogisticRegressionExplainer(Explainer):
         df = pd.DataFrame(self.sample_f, columns=self.sampler.feature_names())
 
         df["Label"] = self.sample_l
-
-        df["Distances"] = self.distances
 
         df["Exp. Sim."] = self.exponential_sim
 
@@ -115,5 +101,5 @@ class LogisticRegressionExplainer(Explainer):
 
         return {"weights": self.weights,
                 "metric": self.metric,
-                "measure": self.measure,
+                "measure": self.sampler.measure,
                 "num_sam": self.sampler.num_samples}

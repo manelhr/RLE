@@ -9,21 +9,17 @@ class Explainer(VerboseObject):
 
     def __init__(self,
                  sampler,
-                 measure,
                  verbose=False):
         """ Initializes an explainer with a sampler and a measure of importance of the distance between a randomly
         sampled point and the decision we want to explain. This could be for instance, the steepness of a exponential
         kernel.
 
         :param sampler: sampler object.
-        :param measure: measure of importance of the distance between sampled point and the decision.
         :param verbose: defined@VerboseObject
         :return: nothing.
         """
 
         self.sampler = sampler
-
-        self.measure = measure
 
         super().__init__(verbose)
 

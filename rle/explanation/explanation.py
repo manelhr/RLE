@@ -1,5 +1,5 @@
-from rle.util.verbose_object import VerboseObject
 from sklearn.model_selection import train_test_split
+from rle.util.verbose_object import VerboseObject
 
 
 class Explanation(VerboseObject):
@@ -15,6 +15,7 @@ class Explanation(VerboseObject):
                  destination=None,
                  num_samples=500,
                  measure=1,
+                 decision=None,
                  verbose=False):
         """ Initializes the explainer.
         :param features: a np.array of np.arrays containing the different features.
@@ -28,6 +29,8 @@ class Explanation(VerboseObject):
         :param sampler: sampler object.
         :param depicter: depicter object.
         :param num_samples: Number of samples sampled.
+        :param measure: Measure for neighborhood.
+        :param decision: Sets standard decision.
         :param verbose: defined@VerboseObject
         """
 
@@ -40,11 +43,12 @@ class Explanation(VerboseObject):
 
         # Initializes sampler
         self._sampler = sampler(features, f_names, f_types,
-                                label, l_name, l_type, num_samples,
+                                label, l_name, l_type,
+                                num_samples, measure,
                                 self.classifier_fn, verbose)
 
         # Initializes explainer
-        self._explainer = explainer(self._sampler, measure, verbose)
+        self._explainer = explainer(self._sampler, verbose)
 
         # Initializes standard depicter
         if depicter is not None:
@@ -54,6 +58,9 @@ class Explanation(VerboseObject):
 
         # Initializes the result of an explanation
         self._exp_result = None
+
+        # Initializes sample decision
+        self._decision = decision
 
         super().__init__(verbose)
 
@@ -67,7 +74,7 @@ class Explanation(VerboseObject):
         """
 
         # Sample explain
-        self._explainer.explain(decision, num_samples, measure)
+        self._explainer.explain(decision, measure, num_samples)
 
         # Calculate metrics
         self._explainer.metrics()

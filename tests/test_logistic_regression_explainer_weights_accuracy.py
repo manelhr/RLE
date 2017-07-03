@@ -1,5 +1,5 @@
 from rle.explainers.logistic_regression_explainer import LogisticRegressionExplainer
-from rle.samplers.gaussian_sampler import GaussianSampler
+from rle.samplers.gaussian_exponential_sampler import GaussianExponentialSampler
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt
@@ -17,13 +17,15 @@ fig, axs = plt.subplots(1, 3, figsize=(10, 2.5), sharex=True, sharey=True)
 # Initializes dataset and sample_size/mesh variables
 decision = np.array([0.34, 0.44])
 measure = 0.15
-sample_sizes = np.arange(10, 500, 10)
-measures = np.arange(0.05, 5, 0.05)
+sample_sizes = np.arange(50, 500, 50)
+measures = np.arange(0.05, 5, 0.1)
 X_mesh, Y_mesh = np.meshgrid(sample_sizes, measures)
 combined = np.stack([X_mesh.ravel(), Y_mesh.ravel()], axis=-1)
 accuracy = []
 feature1 = []
 feature2 = []
+
+print(len(combined))
 
 for sample_size, measure in combined:
     np.random.seed(1)
@@ -44,12 +46,12 @@ for sample_size, measure in combined:
     rf.fit(X_train, y_train)
 
     # Initializes sampler
-    sampler = GaussianSampler(X, ["Feature 1", "Feature 2"], ["numerical", "numerical"],
-                              y, "Label", "Categorical",
-                              sample_size, rf.predict_proba)
+    sampler = GaussianExponentialSampler(X, ["Feature 1", "Feature 2"], ["numerical", "numerical"],
+                                         y, "Label", "Categorical",
+                                         sample_size, measure, rf.predict_proba)
 
     # Initializes explainer
-    explainer = LogisticRegressionExplainer(sampler, measure)
+    explainer = LogisticRegressionExplainer(sampler)
 
     # Performs Logistic Regression
     weights = explainer.explain(decision)

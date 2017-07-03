@@ -1,6 +1,6 @@
 from rle.explainers.logistic_regression_explainer import LogisticRegressionExplainer
 from rle.depicters.depicter_bar_weights import DepicterBarWeights
-from rle.samplers.gaussian_sampler import GaussianSampler
+from rle.samplers.gaussian_exponential_sampler import GaussianExponentialSampler
 from sklearn.model_selection import train_test_split
 from rle.explanation.explanation import Explanation
 from sklearn.ensemble import RandomForestClassifier
@@ -30,7 +30,7 @@ exp = Explanation(X_train, ["Feature 1", "Feature 2"], None,
                   y_train, "Label", None,
                   model=RandomForestClassifier(n_estimators=100),
                   explainer=LogisticRegressionExplainer,
-                  sampler=GaussianSampler,
+                  sampler=GaussianExponentialSampler,
                   depicter=DepicterBarWeights,
                   destination=destination)
 

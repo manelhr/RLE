@@ -1,5 +1,5 @@
 from rle.explainers.logistic_regression_explainer import LogisticRegressionExplainer
-from rle.samplers.gaussian_sampler import GaussianSampler
+from rle.samplers.gaussian_exponential_sampler import GaussianExponentialSampler
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt
@@ -39,12 +39,12 @@ for sample_size, i in zip(sample_sizes, range(len(axs))):
     rf.fit(X_train, y_train)
 
     # Initializes sampler
-    sampler = GaussianSampler(X, ["Feature 1", "Feature 2"], ["numerical", "numerical"],
-                              y, "Label", "Categorical",
-                              sample_size, rf.predict_proba)
+    sampler = GaussianExponentialSampler(X, ["Feature 1", "Feature 2"], ["numerical", "numerical"],
+                                         y, "Label", "Categorical",
+                                         sample_size, measure, rf.predict_proba)
 
     # Initializes explainer
-    explainer = LogisticRegressionExplainer(sampler, measure)
+    explainer = LogisticRegressionExplainer(sampler)
 
     # Performs Logistic Regression
     weights = explainer.explain(decision)
