@@ -38,33 +38,3 @@ class RobustExplanation(VerboseObject):
                                        depicter=depicter, destination=destination,
                                        decision=decision, verbose=verbose)
 
-
-    def sample_explain_depict(self, decision, num_samples=None, measure=None, depict=True):
-        """ This method samples the explanation calculates the metrics. If the depict parameter is not False, depicts.
-        :param decision: decision of interest.
-        :param num_samples: number of samples to be sampled by the sampler.
-        :param measure: measure to be used in the model.
-        :param depict: either a boolean (if false doesn't depict, if true depicts) or a custom depicter.
-        :return: if depict is False, the explanation result, else, nothing.
-        """
-
-        # Sample explain
-        self._explainer.explain(decision, measure, num_samples)
-
-        # Calculate metrics
-        self._explainer.metrics()
-
-        # Get explanation result
-        self._exp_result = self._explainer.explanation_result()
-
-        if depict is False:
-            return self._exp_result
-
-        elif depict is True:
-            if self._depicter is None:
-                raise Exception("No depicter given.")
-            else:
-                self._depicter.depict(self._exp_result)
-
-        else:
-            depict.depict(self._exp_result)

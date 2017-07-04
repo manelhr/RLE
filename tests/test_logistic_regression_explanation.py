@@ -28,7 +28,7 @@ df["Label"] = y
 # Initializes decision
 decision = np.array([0.34, 0.44])
 
-# Initializes destination for the image
+# Initializes destination for the images
 destination = "./imgs/logistic_regression_explanation.pdf"
 
 # Initializes explainer

@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from rle.explanation.explanation import Explanation
 from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt
+from sklearn import mixture
 import seaborn as sns
 import pandas as pd
 import numpy as np
@@ -30,7 +31,7 @@ def inside_triangle(p, a, b, c):
         return False
 
 
-fig, axs = plt.subplots(1, 3, figsize=(8, 2.5))
+fig, axs = plt.subplots(1, 3, figsize=(9, 2.5))
 
 # Initializes double triangle dataset
 X = np.random.rand(5000, 2)
@@ -79,17 +80,22 @@ for i in linspace:
     # ys = (-tmp['weights'][0][1] * xs - tmp['weights'][2][1]) / tmp['weights'][1][1]
     # axs[0].plot(xs, ys)
 
-axs[1].set_title("(b) Weighted Accuracy")
-axs[1].plot(linspace, metric,  '--', label="Acc")
-axs[1].set_xlabel("$\ell$")
+axs[1].set_title("(b) Feature Distribution")
+sns.distplot(weight[0], ax=axs[1])
 
-axs[2].set_title("(c) Feature Values (\%)")
+axs[2].set_title("(c) Weighted Accuracy / Values (\%)")
+axs[2].plot(linspace, metric, label="Acc")
 axs[2].plot(linspace, weight[0], label="F1")
 axs[2].plot(linspace, weight[1], label="F2")
 axs[2].set_xlabel("$\ell$")
 
-plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+axs[2].legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.suptitle("Multiples Explanations for Values of $\ell$")
 plt.subplots_adjust(wspace=0.25, top=0.7)
 plt.savefig("./imgs/test_logistic_regression_robust_explanation_1.pdf", bbox_inches="tight")
 
+X = np.array(weight[0]).reshape(len(weight[0]), 1)
+clf = mixture.GaussianMixture(n_components=2, covariance_type='full')
+clf.fit(X)
+print(clf.predict(X))
+print(clf.aic(X))
