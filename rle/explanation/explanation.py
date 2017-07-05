@@ -1,8 +1,7 @@
 from sklearn.model_selection import train_test_split
-from rle.util.verbose_object import VerboseObject
 
 
-class Explanation(VerboseObject):
+class Explanation:
     """ This class does everything: samples, explains and depicts. """
 
     def __init__(self,
@@ -15,8 +14,7 @@ class Explanation(VerboseObject):
                  destination=None,
                  num_samples=500,
                  measure=1,
-                 decision=None,
-                 verbose=False):
+                 decision=None):
         """ Initializes the explainer.
         :param features: a np.array of np.arrays containing the different features.
         :param f_names: a list with the strings of the names features.
@@ -31,7 +29,6 @@ class Explanation(VerboseObject):
         :param num_samples: Number of samples sampled.
         :param measure: Measure for neighborhood.
         :param decision: Sets standard decision.
-        :param verbose: defined@VerboseObject
         """
 
         self.features_train, self.features_test, self.label_train, self.label_test = train_test_split(features, label)
@@ -61,8 +58,6 @@ class Explanation(VerboseObject):
 
         # Initializes sample decision
         self._decision = decision
-
-        super().__init__(verbose)
 
     def sample_explain_depict(self, decision, num_samples=None, measure=None,  depict=True, axis=None):
         """ This method samples the explanation calculates the metrics. If the depict parameter is not False, depicts.

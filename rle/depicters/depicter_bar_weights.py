@@ -8,11 +8,10 @@ class DepicterBarWeights(Depicter):
     """ This abstract class depicts any explainer that has weights. """
 
     def __init__(self,
-                 destination=None,
-                 verbose=False):
-        """ defined@Depicter """
+                 destination=None):
+        """defined@Depicter"""
 
-        super().__init__(destination, verbose)
+        super().__init__(destination)
 
     def depict(self, explanation_result, axis=None):
         """ Depicts explanation with weights as a bar chart.

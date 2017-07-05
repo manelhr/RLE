@@ -1,8 +1,7 @@
 import abc
-from rle.util.verbose_object import VerboseObject
 
 
-class Sampler(VerboseObject):
+class Sampler:
     """ This is the abstract class that needs to be extended to implement the samplers for different models. """
 
     __metaclass__ = abc.ABCMeta
@@ -11,8 +10,7 @@ class Sampler(VerboseObject):
                  features, f_names, f_types,
                  label, l_name, l_type,
                  num_samples, measure,
-                 classifier_fn,
-                 verbose=False):
+                 classifier_fn):
         """ Initializes a sampler with attributes related to a dataset's features and its label. Only Work for datasets
         with only one label.
 
@@ -34,8 +32,6 @@ class Sampler(VerboseObject):
         self.num_samples = int(num_samples)
         self.measure = measure
         self.classifier_fn = classifier_fn
-
-        super().__init__(verbose)
 
     @abc.abstractmethod
     def sample(self, instance, num_samples=None, measure=None):

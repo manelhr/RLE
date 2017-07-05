@@ -1,11 +1,9 @@
-from rle.util.inherit_docstring import inherit_docstring
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.preprocessing import StandardScaler
 from rle.samplers.sampler import Sampler
 import numpy as np
 
 
-@inherit_docstring
 class GaussianExponentialSampler(Sampler):
     """ This class implements a sampler based on generating a gaussian distribution around the point to be explained.
         Restrictions:
@@ -16,8 +14,7 @@ class GaussianExponentialSampler(Sampler):
                  features, f_names, f_types,
                  label, l_name, l_type,
                  num_samples, measure,
-                 classifier_fn,
-                 verbose=False):
+                 classifier_fn):
         """ defined@Sampler Also initializes distances metrics.
 
         :param features: defined@Sampler
@@ -29,14 +26,12 @@ class GaussianExponentialSampler(Sampler):
         :param num_samples: defined@Sampler
         :param measure: defined@Sampler
         :param classifier_fn: defined@Sampler
-        :param verbose: defined@VerboseObject
         :return: defined@Sampler
         """
         super().__init__(features, f_names, f_types,
                          label, l_name, l_type,
                          num_samples, measure,
-                         classifier_fn,
-                         verbose)
+                         classifier_fn)
 
         self.scaler = StandardScaler(with_mean=False)
 
@@ -70,4 +65,3 @@ class GaussianExponentialSampler(Sampler):
         exponential_sim = np.sqrt(np.exp(-(distances ** 2) / ms ** 2))
 
         return s_features, s_labels, exponential_sim
-

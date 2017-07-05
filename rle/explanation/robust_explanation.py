@@ -15,8 +15,7 @@ class RobustExplanation(VerboseObject):
                  explainer,
                  sampler,
                  depicter=None,
-                 decision=None,
-                 verbose=False):
+                 decision=None):
         """ Initializes the robust explainer.
         :param features: defined@Explanation
         :param f_names: defined@Explanation
@@ -29,13 +28,12 @@ class RobustExplanation(VerboseObject):
         :param sampler: defined@Explanation
         :param depicter: defined@Explanation
         :param decision: defined@Explanation
-        :param verbose: defined@VerboseObject
         """
 
         self.explanation = Explanation(features=features, f_names=f_names, f_types=f_types,
                                        label=label, l_name=l_name, l_type=l_type,
                                        model=model,  explainer=explainer, sampler=sampler,
-                                       depicter=depicter, decision=decision, verbose=verbose)
+                                       depicter=depicter, decision=decision)
 
     def sample_explain_depict(self, decision, n_exp,
                               num_samples=None, measure_min=0.05,
