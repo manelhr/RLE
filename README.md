@@ -58,7 +58,7 @@ The *sampler* samples from a multivariate gaussian distribution *N(d,Sigma)*, wh
     
 An intuition behind sampling can be seen in the image bellow. Given the data in *(a)* we train the model in *(b)* and do the sampling in *(c)*, labeling the instances with the model trained in *(b)*.
 
-![Steps in a local model explainer.](https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_gaussian_exponential_sampler.png)
+![](https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_gaussian_exponential_sampler.png)
  
 ### Explainer
 
@@ -92,8 +92,55 @@ Check for yourself an example of an explanation using our simple depicter:
 <img src=http://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_depicter.png width=300 height=300 />
 </center>
 
+
+### Explanations
+
+All of these things can be used together in the Explanation class, where you basically choose a sampler, an explainer and a depicter and explain away decisions. For example:
+
+    # Initializes explainer
+    exp = Explanation(X_train, ["Feature 1", "Feature 2"], None,
+                      y_train, "Label", None,
+                      model=RandomForestClassifier(n_estimators=100),
+                      explainer=LogisticRegressionExplainer,
+                      sampler=GaussianExponentialSampler,
+                      depicter=DepicterBarWeights,
+                      destination=destination)
+    
+    # Samples, explains and depict
+    exp.sample_explain_depict(decision, depict=True)
+
 ### Robust Explanations
 
 We now start considering the problems that may appear as we locally explaining a complex model. Notice that we had two parameters in the sampler that were completely arbitrary. The sample size *n* and a measure of locality *l*, which in our specific case was related to the steepness of the exponential kernel. 
 
-It is not hard to prove with a toy example that both of these parameters have a huge impact in the local classifier that we are training.
+It is not hard to prove with a toy example that both of these parameters have a huge impact in the local classifier that we are training. In the figures bellow we can see the variation of the explainer according to changes in the sample size *n* and in the measure of locality *l*.
+
+![](https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_logistic_regression_explainer_neighborhood.png)
+ 
+![](https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_logistic_regression_explainer_sampling.png)
+ 
+ 
+ We can also inspect the mesh between the two variables and the parameters of the logistic regression, as it can be seen in the figure bellow.
+ 
+ ![](https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_logistic_regression_explainer_variation.png)
+ 
+ What this images show us is that we clearly have a problem in choosing this parameters. We implement a naïve and simple approach to deal with it. Given a large enough sample size (and we do not address that part of the problem), we want to find several different explanations with different measures of locality. We want to find this peaks in the accuracy, which represent this better explanations. As show in the figure bellow.
+
+<center>
+<img src=https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_intuition.png width=400 height=200 />
+</center>
+
+To do so we simply calculate the results for the explainer in a range of values, and then apply a simple peak detection algorithm to find different explanations with different localities. This is a wrapper around the Explanation class, and provides multiple explanations.
+
+    exp = RobustExplanation(X_train, ["F1", "F2"], None,
+                            y_train, "Label", None,
+                            model=RandomForestClassifier(n_estimators=100),
+                            explainer=LogisticRegressionExplainer,
+                            sampler=GaussianExponentialSampler,
+                            depicter=DepicterBarWeights)
+    
+    exp.sample_explain_depict(decision, 5, num_samples=5000, measure_min=0.005, measure_max=0.5, number_eval=500)
+
+This can provide us with insight like the following image:
+
+ ![](https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_test_logistic_regression_robust_explanation_3.png)

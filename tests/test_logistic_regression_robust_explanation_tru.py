@@ -41,6 +41,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y)
 rf = RandomForestClassifier(n_estimators=100)
 rf.fit(X_train, y_train)
 
+
+dest = "./imgs/test_logistic_regression_robust_explanation_3.pdf"
 # Initializes explainer
 exp = RobustExplanation(X_train, ["F1", "F2"], None,
                         y_train, "Label", None,
@@ -49,5 +51,5 @@ exp = RobustExplanation(X_train, ["F1", "F2"], None,
                         sampler=GaussianExponentialSampler,
                         depicter=DepicterBarWeights)
 
-exp.sample_explain_depict(decision, 5, num_samples=5000, measure_min=0.005, measure_max=0.5, number_eval=500)
+exp.sample_explain_depict(decision, 5, num_samples=5000, measure_min=0.005, measure_max=0.5, number_eval=500, dest=dest)
 

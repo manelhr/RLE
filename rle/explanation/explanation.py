@@ -16,6 +16,7 @@ class Explanation:
                  measure=1,
                  decision=None):
         """ Initializes the explainer.
+
         :param features: A np.array of np.arrays containing the different features.
         :param f_names: A list with the strings of the names features.
         :param f_types: A list with the data types of the features.
@@ -42,10 +43,10 @@ class Explanation:
         self._sampler = sampler(features, f_names, f_types,
                                 label, l_name, l_type,
                                 num_samples, measure,
-                                self.classifier_fn, verbose)
+                                self.classifier_fn)
 
         # Initializes explainer
-        self._explainer = explainer(self._sampler, verbose)
+        self._explainer = explainer(self._sampler)
 
         # Initializes standard depicter
         if depicter is not None:
@@ -61,6 +62,7 @@ class Explanation:
 
     def sample_explain_depict(self, decision, num_samples=None, measure=None,  depict=True, axis=None):
         """ This method samples the explanation calculates the metrics. If the depict parameter is not False, depicts.
+
         :param decision: Decision of interest.
         :param num_samples: Number of samples to be sampled by the sampler.
         :param measure: Measure to be used in the model.

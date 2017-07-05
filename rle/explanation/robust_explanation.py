@@ -1,11 +1,10 @@
-from rle.util.verbose_object import VerboseObject
 from rle.explanation.explanation import Explanation
 from peakutils.peak import indexes
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-class RobustExplanation(VerboseObject):
+class RobustExplanation:
     """ This class provides a robust explanation based on the neighborhood. """
 
     def __init__(self,
@@ -17,6 +16,7 @@ class RobustExplanation(VerboseObject):
                  depicter=None,
                  decision=None):
         """ Initializes the robust explainer.
+
         :param features: defined@Explanation
         :param f_names: defined@Explanation
         :param f_types: defined@Explanation
@@ -37,14 +37,16 @@ class RobustExplanation(VerboseObject):
 
     def sample_explain_depict(self, decision, n_exp,
                               num_samples=None, measure_min=0.05,
-                              measure_max=2, number_eval=500):
+                              measure_max=2, number_eval=500, dest=None):
         """ This method provide sa robust explanation by finding accuracy (or metric) peaks between the measures.
-        :param decision: decision of interest.
-        :param n_exp:
-        :param num_samples: number of samples to be sampled by the sampler.
-        :param measure_min: min measure to be used in the model.
-        :param measure_max: max measure to be used in the model.
-        :param number_eval: number of evaluations between measure_min and measure_max.
+        :param decision: Decision of interest.
+
+        :param n_exp: Max number of explanations.
+        :param num_samples: Number of samples to be sampled by the sampler.
+        :param measure_min: Min measure to be used in the model.
+        :param measure_max: Max measure to be used in the model.
+        :param number_eval: Number of evaluations between measure_min and measure_max.
+        :param dest: Destination to save the image.
         """
 
         linspace = np.linspace(measure_min, measure_max, number_eval)
@@ -71,4 +73,7 @@ class RobustExplanation(VerboseObject):
         axs[0].set_xlabel("$\ell$")
         axs[0].set_title("Weighted Accuracy")
 
-        plt.show()
+        if dest is None:
+            plt.show()
+        else:
+            plt.savefig(dest, bbox_inches="tight")
