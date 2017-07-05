@@ -89,7 +89,7 @@ Depicting is as easy as:
 Check for yourself an example of an explanation using our simple depicter:
 
 <center>
-<img src=http://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_depicter.png width=300 height=300 />
+<img src=http://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_depicter.png width=250 height=250 />
 </center>
 
 
@@ -97,7 +97,6 @@ Check for yourself an example of an explanation using our simple depicter:
 
 All of these things can be used together in the Explanation class, where you basically choose a sampler, an explainer and a depicter and explain away decisions. For example:
 
-    # Initializes explainer
     exp = Explanation(X_train, ["Feature 1", "Feature 2"], None,
                       y_train, "Label", None,
                       model=RandomForestClassifier(n_estimators=100),
@@ -106,7 +105,6 @@ All of these things can be used together in the Explanation class, where you bas
                       depicter=DepicterBarWeights,
                       destination=destination)
     
-    # Samples, explains and depict
     exp.sample_explain_depict(decision, depict=True)
 
 ### Robust Explanations
@@ -143,3 +141,4 @@ To do so we simply calculate the results for the explainer in a range of values,
 
 This can provide us with insight like the following image:
 
+ ![](https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_test_logistic_regression_robust_explanation_3.png)
