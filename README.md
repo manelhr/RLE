@@ -1,5 +1,5 @@
 
-# *R*obust *L*ocal *E*xplainers
+# *R*obust *L*ocal *E*xplanations
 As the machine learning community creates increasingly complex models and pervases areas of societal impact, we are struck with the problem of understanding decisions made by machine learning models without sacrificing their accuracy.
 
 This repo contains some experiments with the concept of a local explainer, as presented by Ribeiro et. al in 
@@ -75,3 +75,25 @@ Explaining is as easy as:
 ### Depicter
 
 Our *depicter* saves or shows a simple bar chart with the weights of each one of the features. It can be tuned to plot on an axis/destination.
+
+Depicting is as easy as:
+    
+    destination = "./imgs/new_explanation.pdf"
+
+    exp_result = explainer.explanation_result()
+
+    depicter = my_depicter(destination)
+    
+    depicter.depict(exp_result)
+
+Check for yourself an example of an explanation using our simple depicter:
+
+<center>
+<img src=http://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_depicter.png width=300 height=300 />
+</center>
+
+### Robust Explanations
+
+We now start considering the problems that may appear as we locally explaining a complex model. Notice that we had two parameters in the sampler that were completely arbitrary. The sample size *n* and a measure of locality *l*, which in our specific case was related to the steepness of the exponential kernel. 
+
+It is not hard to prove with a toy example that both of these parameters have a huge impact in the local classifier that we are training.
