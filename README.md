@@ -89,7 +89,7 @@ Depicting is as easy as:
 Check for yourself an example of an explanation using our simple depicter:
 
 <center>
-<img src=http://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_depicter.png width=250 height=250 />
+<img src=https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_depicter.png width=250 height=250 />
 </center>
 
 
@@ -139,6 +139,6 @@ To do so we simply calculate the results for the explainer in a range of values,
     
     exp.sample_explain_depict(decision, 5, num_samples=5000, measure_min=0.005, measure_max=0.5, number_eval=500)
 
-This can provide us with insight like the following image:
+This can provide us with insight like the image bellow. We can get two different explanations with two different meanings.
 
  ![](https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_test_logistic_regression_robust_explanation_3.png)
