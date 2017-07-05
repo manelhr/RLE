@@ -47,8 +47,8 @@ class DepicterBarWeights(Depicter):
         ax.set_yticklabels(labels)
         ax.set_xlabel('Weights')
         ax.set_xlim([-max_v - 0.1 * max_v, max_v + 0.1 * max_v])
-        ax.set_title("Acc:" + str(explanation_result['metric']) + " / " +
-                     "$l$:" + str(explanation_result['measure']) + " / " +
+        ax.set_title("Acc:" + str(explanation_result['metric'])[:4] + " / " +
+                     "$l$:" + str(explanation_result['measure'])[:4] + " / " +
                      "$n$:" + str(explanation_result['num_sam']))
 
         if axis is not None:

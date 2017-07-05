@@ -4,8 +4,9 @@ from rle.depicters.depicter_bar_weights import DepicterBarWeights
 from sklearn.model_selection import train_test_split
 from rle.explanation.explanation import Explanation
 from sklearn.ensemble import RandomForestClassifier
+from peakutils.peak import indexes
 import matplotlib.pyplot as plt
-from sklearn import mixture
+from scipy import interpolate
 import seaborn as sns
 import pandas as pd
 import numpy as np
@@ -48,11 +49,9 @@ df["Label"] = rf.predict(X_test)
 df_l0 = df[df.Label == 0]
 df_l1 = df[df.Label == 1]
 axs[0].plot(decision[0], decision[1], "b*", label="Decision")
-axs[0].scatter(df_l0["F1"].values, df_l0["F2"].values, alpha=0.4)
-axs[0].scatter(df_l1["F1"].values, df_l1["F2"].values, alpha=0.4)
+axs[0].scatter(df_l0["F1"].values, df_l0["F2"].values, alpha=0.1)
+axs[0].scatter(df_l1["F1"].values, df_l1["F2"].values, alpha=0.1)
 axs[0].set_title("(a) Model Prediction")
-axs[0].set_xlim(min(df["F1"].values) + 0.010, max(df["F1"].values) - 0.010)
-axs[0].set_ylim(min(df["F2"].values) + 0.010, max(df["F2"].values) - 0.010)
 axs[0].set_xlabel("F1")
 axs[0].set_ylabel("F2")
 
@@ -64,38 +63,53 @@ exp = Explanation(X_train, ["F1", "F2"], None,
                   sampler=GaussianExponentialSampler,
                   depicter=DepicterBarWeights)
 
-linspace = np.linspace(0.005, 0.5, 100)
+linspace = np.linspace(0.005, 0.5, 500)
 metric = []
 weight = [[], []]
+tru_w = []
 
 for i in linspace:
     tmp = exp.sample_explain_depict(decision, num_samples=5000, measure=i, depict=False)
     metric.append(tmp['metric'])
 
-    weight[0].append(abs(tmp['weights'][0][1])/(abs(tmp['weights'][0][1]) + abs(tmp['weights'][1][1])))
-    weight[1].append(abs(tmp['weights'][1][1])/(abs(tmp['weights'][0][1]) + abs(tmp['weights'][1][1])))
+    weight[0].append(abs(tmp['weights'][0][1]) / (abs(tmp['weights'][0][1]) + abs(tmp['weights'][1][1])))
+    weight[1].append(abs(tmp['weights'][1][1]) / (abs(tmp['weights'][0][1]) + abs(tmp['weights'][1][1])))
+    tru_w.append([tmp['weights'][0][1], tmp['weights'][1][1], tmp['weights'][2][1]])
 
-    # # Plots regression line
-    # xs = np.array([min(df["F1"].values), max(df["F1"].values)])
-    # ys = (-tmp['weights'][0][1] * xs - tmp['weights'][2][1]) / tmp['weights'][1][1]
-    # axs[0].plot(xs, ys)
+# Interpolates
+X = np.array(metric).reshape(len(metric), 1)
+tck = interpolate.splrep(linspace, metric, s=0.1)
+y_new = interpolate.splev(linspace, tck, der=0)
+matrix = np.array([X.reshape(len(weight[0])), X.reshape(len(weight[1])), metric, y_new, linspace]).transpose()
+df2 = pd.DataFrame(matrix, columns=["F1", "F2", "metric", "interp_metric", "measure"])
+axs[0].plot(df2.measure, df2.metric, label="Acc Interpolated")
 
-axs[1].set_title("(b) Feature Distribution")
-sns.distplot(weight[0], ax=axs[1])
+# Plots weighted accuracy
+axs[1].set_title("(b) Weighted Accuracy")
+axs[1].scatter(df2.measure, df2.metric, alpha=0.05)
+axs[1].plot(df2.measure, df2.interp_metric, label="Acc Interpolated")
+axs[1].set_xlabel("$\ell$")
 
-axs[2].set_title("(c) Weighted Accuracy / Values (\%)")
-axs[2].plot(linspace, metric, label="Acc")
+# Plot Values
+axs[2].set_title("(c) Values (\%)")
 axs[2].plot(linspace, weight[0], label="F1")
 axs[2].plot(linspace, weight[1], label="F2")
 axs[2].set_xlabel("$\ell$")
-
 axs[2].legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.suptitle("Multiples Explanations for Values of $\ell$")
 plt.subplots_adjust(wspace=0.25, top=0.7)
 plt.savefig("./imgs/test_logistic_regression_robust_explanation_1.pdf", bbox_inches="tight")
 
-X = np.array(weight[0]).reshape(len(weight[0]), 1)
-clf = mixture.GaussianMixture(n_components=2, covariance_type='full')
-clf.fit(X)
-print(clf.predict(X))
-print(clf.aic(X))
+fig, axs = plt.subplots(1, 3, figsize=(9, 2.5))
+
+min_len = len(df2.interp_metric) / 10
+
+peaks = indexes(df2.metric, 0.6, min_len)
+
+for i, j in zip(peaks, [1, 2]):
+    axs[0].plot(df2.measure[i], df2.metric[i], "b*")
+    exp.sample_explain_depict(decision, num_samples=5000, measure=df2.measure[i], depict=True, axis=axs[j])
+axs[0].set_xlabel("$\ell$")
+axs[0].set_title("Weighted Accuracy")
+
+plt.savefig("./imgs/test_logistic_regression_robust_explanation_2.pdf", bbox_inches="tight")

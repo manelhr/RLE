@@ -81,7 +81,9 @@ class LogisticRegressionExplainer(Explainer):
 
         self.pred_l = self.model.predict(self.sample_f)
         f = partial(accuracy_score, sample_weight=self.exponential_sim) if not given_function else given_function
-
+        print(self.exponential_sim)
+        print(self.sample_l)
+        print(self.pred_l)
         self.metric = f(self.sample_l, self.pred_l)
 
         return f(self.sample_l, self.pred_l)
