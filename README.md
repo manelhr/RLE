@@ -143,4 +143,3 @@ To do so we simply calculate the results for the explainer in a range of values,
 
 This can provide us with insight like the following image:
 
- ![a](https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_test_logistic_regression_robust_explanation_3.png)
