@@ -45,7 +45,7 @@ for measure, i in zip(measures, range(len(axs))):
                                          sample_size, measure, rf.predict_proba)
 
     # Initializes explainer
-    explainer = LogisticRegressionExplainer(sampler, measure)
+    explainer = LogisticRegressionExplainer(sampler)
 
     # Performs Logistic Regression
     weights = explainer.explain(decision)

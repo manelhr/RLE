@@ -16,16 +16,16 @@ class Explanation:
                  measure=1,
                  decision=None):
         """ Initializes the explainer.
-        :param features: a np.array of np.arrays containing the different features.
-        :param f_names: a list with the strings of the names features.
-        :param f_types: a list with the data types of the features.
-        :param label: a np.array containing a label.
-        :param l_name: a string with the name of the label.
-        :param l_type: the type of the label.
+        :param features: A np.array of np.arrays containing the different features.
+        :param f_names: A list with the strings of the names features.
+        :param f_types: A list with the data types of the features.
+        :param label: A np.array containing a label.
+        :param l_name: A string with the name of the label.
+        :param l_type: The type of the label.
         :param model: sklearn model for classification of the features (.fit and .predict_proba).
-        :param explainer: explainer object.
-        :param sampler: sampler object.
-        :param depicter: depicter object.
+        :param explainer: Explainer object.
+        :param sampler: Sampler object.
+        :param depicter: Depicter object.
         :param num_samples: Number of samples sampled.
         :param measure: Measure for neighborhood.
         :param decision: Sets standard decision.
@@ -61,12 +61,12 @@ class Explanation:
 
     def sample_explain_depict(self, decision, num_samples=None, measure=None,  depict=True, axis=None):
         """ This method samples the explanation calculates the metrics. If the depict parameter is not False, depicts.
-        :param decision: decision of interest.
-        :param num_samples: number of samples to be sampled by the sampler.
-        :param measure: measure to be used in the model.
-        :param depict: either a boolean (if false doesn't depict, if true depicts) or a custom depicter.
+        :param decision: Decision of interest.
+        :param num_samples: Number of samples to be sampled by the sampler.
+        :param measure: Measure to be used in the model.
+        :param depict: Either a boolean (if false doesn't depict, if true depicts) or a custom depicter.
         :param axis: matplotlib sub axis where the depiction should be plotted.
-        :return: if depict is False, the explanation result, else, nothing.
+        :return: If depict is False, the explanation result, else, nothing.
         """
 
         # Sample explain

@@ -41,9 +41,9 @@ These steps are illustrated in letters *(a-d)* in the figure bellow:
 
 In this repo we implement a logistic regression local model (*M'*), a gaussian sampler (*S*) and a bar chart depicter (*D*). We try to keep it generic. Notice that our stack only works for two labels and numerical features.
 
-### Sampling
+### Sampler
 
-The gaussian sampler samples from a multivariate gaussian distribution *N(d,Sigma)*, where the covariance the different random variables is 0. It also produces an exponential kernel, weighting the sampled distances. The steepness of the kernel *l* indicates how local the explanation is.
+The *sampler* samples from a multivariate gaussian distribution *N(d,Sigma)*, where the covariance the different random variables is 0. It also produces an exponential kernel, weighting the sampled distances. The steepness of the kernel *l* indicates how local the explanation is.
  
  Sampling is as easy as:
 
@@ -56,4 +56,22 @@ The gaussian sampler samples from a multivariate gaussian distribution *N(d,Sigm
     
     sample_f, sample_l, weights = sampler.sample(decision)
     
-An intuition behind sampling can be seen in the image bellow:
+An intuition behind sampling can be seen in the image bellow. Given the data in *(a)* we train the model in *(b)* and do the sampling in *(c)*, labeling the instances with the model trained in *(b)*.
+
+![Steps in a local model explainer.](https://raw.githubusercontent.com/manelhr/RLE/master/tests/imgs/_gaussian_exponential_sampler.png)
+ 
+### Explainer
+
+Our *explainer*, or in other words, the local interpretable model that we fit in the more complex machine learning one is as weighted logistic regression. 
+
+Explaining is as easy as:
+
+    decision = np.array([-0.42, 0.62])
+
+    explainer = LogisticRegressionExplainer(sampler)
+
+    explainer.explain(decision)
+    
+### Depicter
+
+Our *depicter* saves or shows a simple bar chart with the weights of each one of the features. It can be tuned to plot on an axis/destination.
